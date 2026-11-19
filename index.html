@@ -31,7 +31,7 @@
         }
 
         /* Signature Canvas Styling */
-        #signature-pad {
+        .sig-canvas {
             touch-action: none;
             cursor: crosshair;
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
@@ -59,21 +59,23 @@
         }
 
         /* ==========================================================================
-           PRINT / PDF EXPORT STYLES (CRITICAL FOR INLINE PHOTOS & CLEAN LAYOUT)
+           PRINT / PDF EXPORT STYLES (REPEATING HEADER, INLINE PHOTOS & CLEAN LAYOUT)
            ========================================================================== */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 12mm 14mm;
+                margin: 10mm 12mm;
             }
 
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
-                font-size: 10pt !important;
-                line-height: 1.4 !important;
+                font-size: 9.5pt !important;
+                line-height: 1.35 !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
             /* Hide interactive UI controls, buttons, upload prompts, and warnings */
@@ -82,9 +84,22 @@
             input[type="file"], 
             .upload-controls, 
             #validation-banner,
-            #clear-sig-btn,
+            .clear-sig-btn,
             .add-custom-question-box {
                 display: none !important;
+            }
+
+            /* Repeating Header Table Layout across every printed PDF page */
+            .print-layout-table {
+                display: table !important;
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            .print-layout-thead {
+                display: table-header-group !important;
+            }
+            .print-layout-tbody {
+                display: table-row-group !important;
             }
 
             /* Reset containers for clean paper flow */
@@ -98,12 +113,36 @@
             .card-section {
                 box-shadow: none !important;
                 border: 1px solid #cbd5e1 !important;
-                border-radius: 6px !important;
-                margin-bottom: 12px !important;
+                border-radius: 8px !important;
+                margin-bottom: 10px !important;
                 padding: 12px !important;
                 background: #ffffff !important;
                 page-break-inside: avoid;
                 break-inside: avoid;
+            }
+
+            /* Dark Branding Header Card in Print */
+            .brand-header-card {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                border: 1px solid #0f172a !important;
+                margin-bottom: 12px !important;
+                padding: 12px 16px !important;
+            }
+            .brand-header-card input {
+                color: #ffffff !important;
+            }
+            .brand-header-card #business-slogan {
+                color: #93c5fd !important;
+            }
+            #logo-preview-container {
+                border: none !important;
+                background-color: #ffffff !important;
+                width: 56px !important;
+                height: 56px !important;
+            }
+            #logo-preview-container.no-logo-uploaded {
+                display: none !important;
             }
 
             /* Make form inputs look like clean printed text */
@@ -115,11 +154,34 @@
                 border: none !important;
                 background: transparent !important;
                 padding: 0 !important;
+                margin: 0 !important;
                 font-weight: 600 !important;
                 color: #0f172a !important;
                 appearance: none !important;
                 -webkit-appearance: none !important;
                 resize: none !important;
+                text-align: left !important;
+            }
+
+            /* Fix Date/Time Alignment & Currency Prefix Overlap in Print */
+            #qa-datetime {
+                display: block !important;
+                width: 100% !important;
+                text-align: left !important;
+            }
+            .currency-input-wrap {
+                display: flex !important;
+                align-items: baseline !important;
+                gap: 2px !important;
+            }
+            .currency-symbol {
+                position: static !important;
+                font-weight: 700 !important;
+                color: #0f172a !important;
+            }
+            #payment-amount {
+                padding-left: 0 !important;
+                width: auto !important;
             }
 
             /* Ensure note textareas display full text or hide if empty */
@@ -130,12 +192,18 @@
                 display: none !important;
             }
 
+            /* Allow checklist container to break naturally across pages while keeping each row intact */
+            .checklist-wrapper-card {
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+            }
+
             /* Checklist Row Formatting in PDF: Keep Question, Answer & Photo INLINE */
             .question-card {
                 border: 1px solid #e2e8f0 !important;
-                border-left: 4px solid #1e293b !important;
-                padding: 10px 12px !important;
-                margin-bottom: 10px !important;
+                border-left: 4px solid #0f172a !important;
+                padding: 9px 12px !important;
+                margin-bottom: 8px !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
                 display: flex !important;
@@ -151,16 +219,16 @@
 
             /* Inline Photo Box on the right side of the question row in PDF */
             .question-photo-inline {
-                flex: 0 0 140px !important;
-                max-width: 140px !important;
+                flex: 0 0 130px !important;
+                max-width: 130px !important;
                 margin-top: 0 !important;
                 text-align: right !important;
             }
 
             .question-photo-inline img {
-                max-height: 105px !important;
+                max-height: 95px !important;
                 width: auto !important;
-                max-width: 140px !important;
+                max-width: 130px !important;
                 object-fit: cover !important;
                 border-radius: 4px !important;
                 border: 1px solid #94a3b8 !important;
@@ -177,345 +245,328 @@
             .status-radio:checked + label.yes-label {
                 background-color: #16a34a !important;
                 color: #ffffff !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
             }
             .status-radio:checked + label.no-label {
                 background-color: #dc2626 !important;
                 color: #ffffff !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
             }
             .status-radio:checked + label.na-label {
                 background-color: #475569 !important;
                 color: #ffffff !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
             }
 
-            /* Print Header & Compliance Banner */
-            .print-header-accent {
-                background-color: #0f172a !important;
-                color: #ffffff !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            #signature-pad {
+            .sig-canvas {
                 background-image: none !important;
                 border: 1px solid #94a3b8 !important;
-                height: 90px !important;
+                height: 85px !important;
             }
         }
     </style>
 </head>
-<body class="pb-16">
-
-    <!-- Top Navigation / Action Bar (Hidden in PDF) -->
-    <header class="no-print sticky top-0 z-40 bg-slate-900 text-white shadow-md border-b border-slate-800">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-                <div class="bg-blue-600 p-2 rounded-lg">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
-                </div>
-                <div>
-                    <span class="font-bold text-sm sm:text-base tracking-tight block leading-none">QUALITY PORTAL</span>
-                    <span class="text-[11px] text-slate-400 font-medium">UK Trade & British Standards QA System</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button type="button" onclick="resetForm()" class="px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition flex items-center gap-1.5">
-                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                    <span class="hidden sm:inline">Reset</span>
-                </button>
-                <button type="button" onclick="generatePDF()" class="px-4 py-1.5 text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow transition flex items-center gap-1.5">
-                    <i data-lucide="file-down" class="w-4 h-4"></i>
-                    <span>Export / Save PDF</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Validation Alert Banner (Hidden in PDF) -->
-    <div id="validation-banner" class="no-print hidden max-w-4xl mx-auto px-4 mt-4">
-        <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-r-lg shadow-sm flex items-start gap-3">
-            <i data-lucide="alert-circle" class="w-5 h-5 text-red-600 shrink-0 mt-0.5"></i>
-            <div class="flex-1">
-                <h3 class="text-sm font-bold text-red-900">Action Required Before Exporting PDF</h3>
-                <p id="validation-message" class="text-xs text-red-700 mt-1"></p>
-            </div>
-            <button onclick="hideValidation()" class="text-red-500 hover:text-red-800">
-                <i data-lucide="x" class="w-4 h-4"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Main Document Container -->
+    <!-- Main Document Container (Uses Print Table Structure so Header Repeats on Every Page) -->
     <main class="max-w-4xl mx-auto px-4 pt-6">
+        <div class="print-layout-table w-full">
+            
+            <!-- REPEATING HEADER ON EVERY PRINTED PAGE -->
+            <div class="print-layout-thead">
+                <!-- =====================================================================
+                     SECTION 1: DARK BUSINESS BRANDING HEADER, LOGO, SLOGAN & SUB-HEADER
+                     ===================================================================== -->
+                <section class="card-section brand-header-card bg-slate-900 text-white rounded-xl shadow-md border border-slate-800 p-5 sm:p-6 mb-5">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-700/80 pb-4">
+                        
+                        <!-- Left: Logo Upload / Camera Capture & Preview -->
+                        <div class="flex items-center gap-4 w-full sm:w-auto">
+                            <div id="logo-preview-container" class="no-logo-uploaded w-20 h-20 rounded-xl bg-white border-2 border-dashed border-slate-500 flex flex-col items-center justify-center overflow-hidden shrink-0 relative">
+                                <img id="logo-img" src="" alt="Business Logo" class="hidden w-full h-full object-contain p-1.5">
+                                <div id="logo-placeholder" class="text-center p-1">
+                                    <i data-lucide="image" class="w-6 h-6 text-slate-400 mx-auto"></i>
+                                    <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Logo</span>
+                                </div>
+                            </div>
 
-        <!-- =====================================================================
-             SECTION 1: BUSINESS BRANDING, LOGO & SLOGAN HEADER
-             ===================================================================== -->
-        <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-5">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-                
-                <!-- Left: Logo Upload / Camera Capture & Preview -->
-                <div class="flex items-center gap-4 w-full sm:w-auto">
-                    <div id="logo-preview-container" class="w-20 h-20 rounded-xl bg-slate-100 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center overflow-hidden shrink-0 relative">
-                        <img id="logo-img" src="" alt="Business Logo" class="hidden w-full h-full object-contain p-1">
-                        <div id="logo-placeholder" class="text-center p-1">
-                            <i data-lucide="image" class="w-6 h-6 text-slate-400 mx-auto"></i>
-                            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Logo</span>
+                            <!-- Logo Upload & Camera Triggers (Hidden on PDF) -->
+                            <div class="upload-controls flex flex-col gap-1.5">
+                                <span class="text-xs font-semibold text-slate-300">Company Logo</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <!-- Live Camera Capture -->
+                                    <label class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-lg transition">
+                                        <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                        <span>Camera</span>
+                                        <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleLogoUpload(event)">
+                                    </label>
+                                    <!-- File Picker -->
+                                    <label class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg border border-slate-600 transition">
+                                        <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                                        <span>Upload</span>
+                                        <input type="file" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+                                    </label>
+                                    <button type="button" id="remove-logo-btn" onclick="removeLogo()" class="hidden px-2 py-1.5 text-xs text-red-400 hover:bg-slate-800 rounded-lg">
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Editable Business Name & Slogan (White Typography) -->
+                        <div class="flex-1 w-full sm:text-right">
+                            <label class="no-print block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5">Business Name</label>
+                            <input type="text" id="business-name" value="David Kennedy Handyman Services" 
+                                   class="w-full sm:text-right text-lg sm:text-xl font-extrabold text-white bg-slate-800/70 sm:bg-transparent border border-slate-700 sm:border-transparent hover:border-slate-600 focus:border-blue-400 rounded-lg px-2 py-1 focus:outline-none transition"
+                                   placeholder="Enter Business Name">
+                            
+                            <label class="no-print block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mt-2 mb-0.5">Business Slogan / Tagline</label>
+                            <input type="text" id="business-slogan" value="Reliable Property Maintenance & Precision Workmanship" 
+                                   class="w-full sm:text-right text-xs sm:text-sm font-medium text-blue-300 bg-slate-800/70 sm:bg-transparent border border-slate-700 sm:border-transparent hover:border-slate-600 focus:border-blue-400 rounded-lg px-2 py-1 focus:outline-none transition"
+                                   placeholder="Enter your business slogan...">
                         </div>
                     </div>
 
-                    <!-- Logo Upload & Camera Triggers (Hidden on PDF) -->
-                    <div class="upload-controls flex flex-col gap-1.5">
-                        <span class="text-xs font-semibold text-slate-600">Company Logo</span>
-                        <div class="flex flex-wrap gap-2">
-                            <!-- Live Camera Capture -->
-                            <label class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-lg transition">
-                                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-                                <span>Camera</span>
-                                <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleLogoUpload(event)">
+                    <!-- Integrated Sub-Header Strip -->
+                    <div class="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="award" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                            <span class="text-xs font-bold tracking-wide uppercase text-white">Quality Assurance & Workmanship Verification Record</span>
+                        </div>
+                        <span class="text-[11px] text-slate-300 font-medium">Aligned with UK Building Regulations & British Standards (BSI)</span>
+                    </div>
+                </section>
+            </div>
+
+            <!-- MAIN BODY CONTENT -->
+            <div class="print-layout-tbody">
+                <!-- =====================================================================
+                     SECTION 2: CUSTOMER, PROPERTY & PAYMENT TRACKING DETAILS
+                     ===================================================================== -->
+                <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-5">
+                    <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-2.5">
+                        <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-600"></i>
+                        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Customer, Property & Payment Record</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Customer Name -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Customer Full Name <span class="text-red-500 no-print">*</span></label>
+                            <input type="text" id="customer-name" placeholder="e.g. Mr. John Smith" 
+                                   class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                        </div>
+
+                        <!-- Agreement / Job Reference Number -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Agreement / Quote Reference No.</label>
+                            <input type="text" id="agreement-ref" placeholder="e.g. DK-2026-048" 
+                                   class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                        </div>
+
+                        <!-- Customer Property Address -->
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Customer Property Address <span class="text-red-500 no-print">*</span></label>
+                            <input type="text" id="customer-address" placeholder="e.g. 14 High Street, Exeter, EX4 3AA" 
+                                   class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                        </div>
+
+                        <!-- Backdatable Date & Time of Inspection -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">
+                                Completion Date & Time <span class="text-[11px] font-normal text-slate-400 no-print">(Editable / Backdatable)</span>
                             </label>
-                            <!-- File Picker -->
-                            <label class="cursor-pointer inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg border border-slate-300 transition">
-                                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
-                                <span>Upload</span>
-                                <input type="file" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
-                            </label>
-                            <button type="button" id="remove-logo-btn" onclick="removeLogo()" class="hidden px-2 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-lg">
-                                Remove
+                            <input type="datetime-local" id="qa-datetime" 
+                                   class="w-full text-left text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                        </div>
+
+                        <!-- Payment Status & Agreed Amount (£) -->
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Agreed Amount (£)</label>
+                                <div class="currency-input-wrap relative flex items-center">
+                                    <span class="currency-symbol absolute left-3 text-sm font-bold text-slate-600 pointer-events-none">£</span>
+                                    <input type="number" id="payment-amount" step="0.01" min="0" placeholder="0.00" 
+                                           class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Payment Status</label>
+                                <select id="payment-status"
+                                        class="w-full text-sm font-semibold bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                                    <option value="Unpaid / Balance Due">Unpaid / Balance Due</option>
+                                    <option value="Paid in Full">Paid in Full</option>
+                                    <option value="Deposit Paid">Deposit Paid</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =====================================================================
+                     SECTION 3: TASK SELECTOR (15 BRITISH STANDARD JOBS + CUSTOM OTHER)
+                     ===================================================================== -->
+                <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="wrench" class="w-4 h-4 text-blue-600"></i>
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Selected Handyman Task</h2>
+                        </div>
+                        <span id="standard-ref-badge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                            BS 8000-0 Workmanship Standard
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="job-selector" class="no-print block text-xs text-slate-500 mb-1.5">
+                            Choose from the 15 standard handyman jobs below, or select <strong>"Other (Custom Odd Task)"</strong> to define your own criteria:
+                        </label>
+                        <select id="job-selector" onchange="handleJobSelection()" 
+                                class="w-full text-sm sm:text-base font-bold text-slate-900 bg-slate-50 border-2 border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            <!-- Populated dynamically via JS -->
+                        </select>
+                    </div>
+
+                    <!-- Custom Task Title Input (Shown only when 'Other' is selected) -->
+                    <div id="custom-task-title-box" class="hidden mt-3 pt-3 border-t border-slate-100">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Custom Odd Task Description <span class="text-red-500 no-print">*</span></label>
+                        <input type="text" id="custom-task-name" placeholder="e.g. Garden Shed Felt Roof Repair & Weatherproofing" 
+                               class="w-full text-sm bg-amber-50/50 border border-amber-300 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-600">
+                    </div>
+
+                    <!-- Standard Description Note -->
+                    <p id="standard-description" class="text-xs text-slate-500 mt-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100"></p>
+                </section>
+
+                <!-- =====================================================================
+                     SECTION 4: DYNAMIC QUALITY VERIFICATION CHECKLIST (INLINE MEDIA)
+                     ===================================================================== -->
+                <section class="card-section checklist-wrapper-card bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-5">
+                    <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                        <div>
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Quality Inspection Checklist</h2>
+                            <p class="no-print text-xs text-slate-500 mt-0.5">All items require a mandatory <strong>Yes</strong>, <strong>No</strong>, or <strong>N/A</strong> verification. Photos & notes are optional.</p>
+                        </div>
+                        <span id="completion-counter" class="no-print text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                            0 / 0 Verified
+                        </span>
+                    </div>
+
+                    <!-- Questions Container -->
+                    <div id="questions-container" class="space-y-4">
+                        <!-- Dynamically rendered checklist items -->
+                    </div>
+
+                    <!-- Add Custom Question Box -->
+                    <div class="add-custom-question-box no-print mt-5 pt-4 border-t border-dashed border-slate-300">
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Add Additional Custom Verification Question</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="new-custom-question-input" placeholder="Enter custom quality check requirement..." 
+                                   class="flex-1 text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600">
+                            <button type="button" onclick="addCustomQuestion()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition shrink-0 flex items-center gap-1.5">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span>Add Check</span>
                             </button>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Right: Editable Business Name & Slogan -->
-                <div class="flex-1 w-full sm:text-right">
-                    <label class="no-print block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5">Trading Name</label>
-                    <input type="text" id="business-name" value="David Kennedy Handyman Services" 
-                           class="w-full sm:text-right text-lg sm:text-xl font-extrabold text-slate-900 bg-slate-50 sm:bg-transparent border border-slate-200 sm:border-transparent hover:border-slate-300 focus:border-blue-500 rounded-lg px-2 py-1 focus:outline-none transition"
-                           placeholder="Enter Business Name">
-                    
-                    <label class="no-print block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mt-2 mb-0.5">Business Slogan / Tagline</label>
-                    <input type="text" id="business-slogan" value="Reliable Property Maintenance & Precision Workmanship" 
-                           class="w-full sm:text-right text-xs sm:text-sm font-medium text-blue-600 bg-slate-50 sm:bg-transparent border border-slate-200 sm:border-transparent hover:border-slate-300 focus:border-blue-500 rounded-lg px-2 py-1 focus:outline-none transition"
-                           placeholder="Enter your business slogan...">
-                </div>
-            </div>
+                <!-- =====================================================================
+                     SECTION 5: HANDYMAN & CUSTOMER SIGN-OFF (DUAL SIGNATURE PADS)
+                     ===================================================================== -->
+                <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6">
+                    <div class="flex items-center gap-2 mb-3 border-b border-slate-100 pb-2.5">
+                        <i data-lucide="pen-tool" class="w-4 h-4 text-blue-600"></i>
+                        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Workmanship Declaration & Customer Sign-Off</h2>
+                    </div>
 
-            <!-- British Standards Compliance Declaration Strip -->
-            <div class="mt-4 bg-slate-900 text-white rounded-lg px-4 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 print-header-accent">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="award" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                    <span class="text-xs font-bold tracking-wide uppercase">Quality Assurance & Workmanship Verification Record</span>
-                </div>
-                <span class="text-[11px] text-slate-300 font-medium">Aligned with UK Building Regulations & British Standards (BSI)</span>
-            </div>
-        </section>
+                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                        The handyman certifies that the works detailed above have been completed and checked in accordance with applicable UK British Standards (BSI) guidelines. The customer confirms they have reviewed the completed work and agree with this quality record.
+                    </p>
 
-        <!-- =====================================================================
-             SECTION 2: CUSTOMER, AGREEMENT & PAYMENT TRACKING DETAILS
-             ===================================================================== -->
-        <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-5">
-            <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-2.5">
-                <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-600"></i>
-                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Client, Job & Payment Record</h2>
-            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Column 1: Handyman Details & Signature -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between space-y-3">
+                            <div class="space-y-2.5">
+                                <div class="text-xs font-bold uppercase tracking-wider text-blue-700 border-b border-slate-200 pb-1">1. Handyman Sign-Off</div>
+                                <div>
+                                    <label class="block text-[10px] font-semibold uppercase text-slate-400">Handyman Name</label>
+                                    <input type="text" id="handyman-name" value="David Kennedy" 
+                                           class="w-full text-sm font-bold text-slate-900 bg-transparent border-b border-slate-300 py-0.5 focus:outline-none focus:border-blue-600">
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-semibold uppercase text-slate-400">Role</label>
+                                        <input type="text" id="handyman-position" value="Handyman" 
+                                               class="w-full text-xs font-bold text-slate-900 bg-transparent border-b border-slate-300 py-0.5 focus:outline-none focus:border-blue-600">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-semibold uppercase text-slate-400">Business</label>
+                                        <input type="text" id="handyman-business" value="David Kennedy Handyman Services" 
+                                               class="w-full text-xs font-bold text-slate-900 bg-transparent border-b border-slate-300 py-0.5 focus:outline-none focus:border-blue-600">
+                                    </div>
+                                </div>
+                            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Customer Name -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Customer Full Name <span class="text-red-500 no-print">*</span></label>
-                    <input type="text" id="customer-name" placeholder="e.g. Mr. John Smith" 
-                           class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
-                </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-xs font-semibold text-slate-700">Handyman Signature <span class="text-red-500 no-print">*</span></label>
+                                    <button type="button" onclick="clearSignature('handyman')" class="clear-sig-btn text-xs font-medium text-red-600 hover:text-red-800 flex items-center gap-1">
+                                        <i data-lucide="eraser" class="w-3 h-3"></i>
+                                        <span>Clear</span>
+                                    </button>
+                                </div>
+                                <div class="border-2 border-slate-300 rounded-xl overflow-hidden bg-white">
+                                    <canvas id="handyman-signature-pad" class="sig-canvas w-full h-28 block"></canvas>
+                                </div>
+                            </div>
+                        </div>
 
-                <!-- Agreement / Job Reference Number -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Agreement / Quote Reference No.</label>
-                    <input type="text" id="agreement-ref" placeholder="e.g. DK-2026-048" 
-                           class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
-                </div>
+                        <!-- Column 2: Customer Review & Signature -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between space-y-3">
+                            <div class="space-y-2.5">
+                                <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 border-b border-slate-200 pb-1">2. Customer Review & Acceptance</div>
+                                <div>
+                                    <label class="block text-[10px] font-semibold uppercase text-slate-400">Customer Name (Auto-filled or Editable)</label>
+                                    <input type="text" id="client-signoff-name" placeholder="Customer Full Name" 
+                                           class="w-full text-sm font-bold text-slate-900 bg-transparent border-b border-slate-300 py-0.5 focus:outline-none focus:border-blue-600">
+                                </div>
+                                <p class="text-[11px] text-slate-500 leading-snug pt-1">
+                                    I confirm I have inspected the completed task at my property and agree with the checklist findings recorded above.
+                                </p>
+                            </div>
 
-                <!-- Customer Property Address -->
-                <div class="sm:col-span-2">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Site / Customer Address <span class="text-red-500 no-print">*</span></label>
-                    <input type="text" id="customer-address" placeholder="e.g. 14 High Street, Exeter, EX4 3AA" 
-                           class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
-                </div>
-
-                <!-- Backdatable Date & Time of Inspection -->
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">
-                        Completion Date & Time <span class="text-[11px] font-normal text-slate-400 no-print">(Editable / Backdatable)</span>
-                    </label>
-                    <input type="datetime-local" id="qa-datetime" 
-                           class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
-                </div>
-
-                <!-- Payment Status & Agreed Amount (£) -->
-                <div class="grid grid-cols-2 gap-2.5">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Agreed Amount (£)</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-2 text-sm font-bold text-slate-500">£</span>
-                            <input type="number" id="payment-amount" step="0.01" min="0" placeholder="0.00" 
-                                   class="w-full text-sm bg-slate-50 border border-slate-300 rounded-lg pl-7 pr-3 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-xs font-semibold text-slate-700">Customer Signature <span class="text-[11px] font-normal text-slate-400 no-print">(Optional if remote)</span></label>
+                                    <button type="button" onclick="clearSignature('client')" class="clear-sig-btn text-xs font-medium text-red-600 hover:text-red-800 flex items-center gap-1">
+                                        <i data-lucide="eraser" class="w-3 h-3"></i>
+                                        <span>Clear</span>
+                                    </button>
+                                </div>
+                                <div class="border-2 border-slate-300 rounded-xl overflow-hidden bg-white">
+                                    <canvas id="client-signature-pad" class="sig-canvas w-full h-28 block"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Payment Status</label>
-                        <select id="payment-status" onchange="updatePaymentBadge()"
-                                class="w-full text-sm font-semibold bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 focus:outline-none focus:border-blue-600 focus:bg-white transition">
-                            <option value="Unpaid / Balance Due">Unpaid / Balance Due</option>
-                            <option value="Paid in Full">Paid in Full</option>
-                            <option value="Deposit Paid">Deposit Paid</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- =====================================================================
-             SECTION 3: TASK SELECTOR (15 BRITISH STANDARD JOBS + CUSTOM OTHER)
-             ===================================================================== -->
-        <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-5">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="wrench" class="w-4 h-4 text-blue-600"></i>
-                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Select Undertaken Trade Task</h2>
-                </div>
-                <span id="standard-ref-badge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                    BS 8000-0 Workmanship Standard
-                </span>
-            </div>
-
-            <div class="mb-3">
-                <label for="job-selector" class="no-print block text-xs text-slate-500 mb-1.5">
-                    Choose from the 15 standard handyman trades below, or select <strong>"Other (Custom Odd Task)"</strong> to define your own criteria:
-                </label>
-                <select id="job-selector" onchange="handleJobSelection()" 
-                        class="w-full text-sm sm:text-base font-bold text-slate-900 bg-slate-50 border-2 border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-600 focus:bg-white transition">
-                    <!-- Populated dynamically via JS -->
-                </select>
-            </div>
-
-            <!-- Custom Task Title Input (Shown only when 'Other' is selected) -->
-            <div id="custom-task-title-box" class="hidden mt-3 pt-3 border-t border-slate-100">
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Custom Odd Task Description <span class="text-red-500 no-print">*</span></label>
-                <input type="text" id="custom-task-name" placeholder="e.g. Shed Felt Roof Repair & Weatherproofing" 
-                       class="w-full text-sm bg-amber-50/50 border border-amber-300 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-600">
-            </div>
-
-            <!-- Standard Description Note -->
-            <p id="standard-description" class="text-xs text-slate-500 mt-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100"></p>
-        </section>
-
-        <!-- =====================================================================
-             SECTION 4: DYNAMIC QUALITY VERIFICATION CHECKLIST (INLINE MEDIA)
-             ===================================================================== -->
-        <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-5">
-            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-                <div>
-                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Quality Inspection Checklist</h2>
-                    <p class="no-print text-xs text-slate-500 mt-0.5">All items require a mandatory <strong>Yes</strong>, <strong>No</strong>, or <strong>N/A</strong> verification. Photos & notes are optional.</p>
-                </div>
-                <span id="completion-counter" class="no-print text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
-                    0 / 0 Verified
-                </span>
-            </div>
-
-            <!-- Questions Container -->
-            <div id="questions-container" class="space-y-4">
-                <!-- Dynamically rendered checklist items -->
-            </div>
-
-            <!-- Add Custom Question Box (Visible for 'Other' task or anytime Dave wants to add an extra check) -->
-            <div class="add-custom-question-box no-print mt-5 pt-4 border-t border-dashed border-slate-300">
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">Add Additional Custom Verification Question</label>
-                <div class="flex gap-2">
-                    <input type="text" id="new-custom-question-input" placeholder="Enter custom quality check requirement..." 
-                           class="flex-1 text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600">
-                    <button type="button" onclick="addCustomQuestion()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition shrink-0 flex items-center gap-1.5">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        <span>Add Check</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- =====================================================================
-             SECTION 5: FORMAL SIGN-OFF & TOUCH SIGNATURE PAD
-             ===================================================================== -->
-        <section class="card-section bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6">
-            <div class="flex items-center gap-2 mb-3 border-b border-slate-100 pb-2.5">
-                <i data-lucide="pen-tool" class="w-4 h-4 text-blue-600"></i>
-                <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">Operative Declaration & Sign-Off</h2>
-            </div>
-
-            <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-                I hereby certify that the works detailed above have been inspected and completed in accordance with applicable UK British Standards (BSI) workmanship guidelines, manufacturer instructions, and safe working practices.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
-                <!-- Operative Details -->
-                <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <div>
-                        <label class="block text-[11px] font-semibold uppercase text-slate-400">Operative Name</label>
-                        <input type="text" id="operative-name" value="David Kennedy" 
-                               class="w-full text-sm font-bold text-slate-900 bg-transparent border-b border-slate-300 py-1 focus:outline-none focus:border-blue-600">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold uppercase text-slate-400">Position / Trade Role</label>
-                        <input type="text" id="operative-position" value="Handyman" 
-                               class="w-full text-sm font-bold text-slate-900 bg-transparent border-b border-slate-300 py-1 focus:outline-none focus:border-blue-600">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-semibold uppercase text-slate-400">Company / Business Entity</label>
-                        <input type="text" id="operative-business" value="David Kennedy Handyman Services" 
-                               class="w-full text-sm font-bold text-slate-900 bg-transparent border-b border-slate-300 py-1 focus:outline-none focus:border-blue-600">
-                    </div>
-                </div>
-
-                <!-- Signature Canvas Pad -->
-                <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label class="text-xs font-semibold text-slate-700">Operative Signature <span class="text-red-500 no-print">*</span></label>
-                        <button type="button" id="clear-sig-btn" onclick="clearSignature()" class="text-xs font-medium text-red-600 hover:text-red-800 flex items-center gap-1">
-                            <i data-lucide="eraser" class="w-3.5 h-3.5"></i>
-                            <span>Clear Pad</span>
+                    <!-- Bottom Print Action Button (Hidden in PDF) -->
+                    <div class="no-print mt-6 pt-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <span class="text-xs text-slate-500">Header repeats on every page; inline photos & signatures are formatted onto A4 PDF.</span>
+                        <button type="button" onclick="generatePDF()" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                            <i data-lucide="printer" class="w-4 h-4"></i>
+                            <span>Verify & Export Official QA PDF</span>
                         </button>
                     </div>
-                    <div class="border-2 border-slate-300 rounded-xl overflow-hidden bg-white">
-                        <canvas id="signature-pad" class="w-full h-32 block"></canvas>
-                    </div>
-                    <p class="no-print text-[11px] text-slate-400 mt-1">Sign above using your finger, stylus, or mouse.</p>
-                </div>
+                </section>
             </div>
 
-            <!-- Bottom Print Action Button (Hidden in PDF) -->
-            <div class="no-print mt-6 pt-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <span class="text-xs text-slate-500">All fields, inline photos & signature will be formatted onto A4 PDF.</span>
-                <button type="button" onclick="generatePDF()" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2">
-                    <i data-lucide="printer" class="w-4 h-4"></i>
-                    <span>Verify & Export Official QA PDF</span>
-                </button>
-            </div>
-        </section>
-
+        </div>
     </main>
 
     <!-- =========================================================================
-         JAVASCRIPT LOGIC: BRITISH STANDARDS DATABASE, STATE, MEDIA & SIGNATURE
+         JAVASCRIPT LOGIC: BRITISH STANDARDS DATABASE, STATE, MEDIA & SIGNATURES
          ========================================================================= -->
     <script>
         /**
          * HARDCODED BRITISH STANDARDS (BSI) & UK BUILDING REGULATIONS KNOWLEDGE BASE
-         * Specifically tailored to the 15 agreed handyman trades (strictly excluding gutter cleaning & jet washing)
-         * plus the 16th 'Other (Custom Odd Task)' template.
+         * Tailored for residential handyman services at customer properties.
          */
         const HANDYMAN_QA_STANDARDS = [
             {
@@ -528,7 +579,7 @@
                     "Were substrate surfaces thoroughly degreased, cleaned, and dried prior to sealant application?",
                     "Is the new sanitary-grade, mould-resistant sealant applied as a continuous, gap-free bead?",
                     "Is the sealant finish smoothly tooled with clean edges and zero smearing onto adjacent tiles or fixtures?",
-                    "Has appropriate curing time been advised to the client before exposing the joint to water?"
+                    "Has appropriate curing time been advised to the customer before exposing the joint to water?"
                 ]
             },
             {
@@ -551,7 +602,7 @@
                 description: "Aligned with BS 8539 (Code of Practice for Selection and Installation of Post-Installed Anchors) and safe pipe/cable detection.",
                 questions: [
                     "Was the wall scanned with a calibrated detector to confirm absence of live electrical cables and water pipes?",
-                    "Were load-appropriate fixings selected for the specific substrate (e.g., masonry plugs, heavy-duty cavity anchors, or stud screws)?",
+                    "Were load-appropriate fixings selected for the specific wall type (e.g., masonry plugs, heavy-duty cavity anchors, or stud screws)?",
                     "Have shelves, brackets, or curtain poles been verified horizontally level using a spirit level?",
                     "Has the mounted fixture been load-tested to confirm firm, wobble-free anchoring?",
                     "Are all bracket covers fitted and surrounding wall surfaces free from dust or drill marks?"
@@ -574,7 +625,7 @@
                 id: "internal_door_adjust",
                 title: "5. Internal Door Hanging, Planing & Adjustment",
                 standardRef: "BS 8214 & BS 8000-5 Carpentry",
-                description: "Aligned with BS 8000-5 (Workmanship on Building Sites - Carpentry) for consistent perimeter clearances and smooth latch operation.",
+                description: "Aligned with BS 8000-5 (Workmanship Standards - Carpentry) for consistent perimeter clearances and smooth latch operation.",
                 questions: [
                     "Does the door swing freely throughout its full arc without binding on the frame or floor covering?",
                     "Are perimeter gaps uniform (typically 2mm–3mm at head and jambs, appropriate clearance at threshold)?",
@@ -603,10 +654,10 @@
                 description: "Aligned with BS 1186-3 (Timber for and Workmanship in Joinery) for tight mitre joints and flush scribing.",
                 questions: [
                     "Are external mitre joints and internal scribed joints tight, flush, and free from open gaps?",
-                    "Are boards securely fixed to the wall substrate with pin heads punched below the timber surface?",
+                    "Are boards securely fixed to the wall with pin heads punched below the timber surface?",
                     "Have nail holes and top wall-edge junctions been neatly filled and caulked ready for decoration?",
                     "Does the new trim profile match existing adjacent skirting or architrave accurately?",
-                    "Is the work area swept clean of sawdust and offcuts?"
+                    "Is the room swept clean of sawdust and offcuts?"
                 ]
             },
             {
@@ -717,13 +768,13 @@
                 id: "other_custom",
                 title: "16. Other (Custom Odd Task)",
                 standardRef: "BS 8000-0 General Workmanship Standard",
-                description: "Aligned with BS 8000-0 (Workmanship on Construction Sites - General Principles) and UK Health & Safety Executive (HSE) safe working standards.",
+                description: "Aligned with BS 8000-0 General Workmanship Principles and UK Health & Safety Executive (HSE) residential safe working practices.",
                 questions: [
-                    "Has the work area been inspected for hazards and protected with appropriate dust sheets/coverings?",
-                    "Has the bespoke task been completed to the client's exact specification and UK trade standards?",
+                    "Has the work area in the customer's property been inspected for hazards and protected with clean dust sheets?",
+                    "Has the bespoke task been completed to the customer's exact specification and UK trade standards?",
                     "Are all fixings, joints, and finishes structurally sound, level, and aesthetically clean?",
                     "Has the completed work been functionally tested and demonstrated to the customer?",
-                    "Is the work area left clean, tidy, and free of all tools and waste?"
+                    "Is the customer's property left clean, tidy, and free of all tools and waste?"
                 ]
             }
         ];
@@ -731,8 +782,10 @@
         // Application State
         let currentQuestions = [];
         let questionResponses = {}; // { index: { status: 'Yes'|'No'|'N/A'|null, note: '', photoDataUrl: null } }
-        let isDrawing = false;
-        let hasSignature = false;
+        const sigState = {
+            handyman: { isDrawing: false, hasSigned: false },
+            client: { isDrawing: false, hasSigned: false }
+        };
 
         // =========================================================================
         // INITIALIZATION
@@ -741,8 +794,20 @@
             lucide.createIcons();
             populateJobDropdown();
             setDefaultDateTime();
-            initSignaturePad();
-            handleJobSelection(); // Load initial job checklist
+            initSignaturePads();
+            handleJobSelection();
+
+            // Sync customer name automatically into the Customer Sign-Off box unless manually edited
+            const custInput = document.getElementById('customer-name');
+            const signoffCustInput = document.getElementById('client-signoff-name');
+            custInput.addEventListener('input', () => {
+                if (!signoffCustInput.dataset.edited) {
+                    signoffCustInput.value = custInput.value;
+                }
+            });
+            signoffCustInput.addEventListener('input', () => {
+                signoffCustInput.dataset.edited = 'true';
+            });
         });
 
         function populateJobDropdown() {
@@ -771,6 +836,7 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
+                const container = document.getElementById('logo-preview-container');
                 const img = document.getElementById('logo-img');
                 const placeholder = document.getElementById('logo-placeholder');
                 const removeBtn = document.getElementById('remove-logo-btn');
@@ -779,11 +845,13 @@
                 img.classList.remove('hidden');
                 placeholder.classList.add('hidden');
                 removeBtn.classList.remove('hidden');
+                container.classList.remove('no-logo-uploaded');
             };
             reader.readAsDataURL(file);
         }
 
         function removeLogo() {
+            const container = document.getElementById('logo-preview-container');
             const img = document.getElementById('logo-img');
             const placeholder = document.getElementById('logo-placeholder');
             const removeBtn = document.getElementById('remove-logo-btn');
@@ -792,6 +860,7 @@
             img.classList.add('hidden');
             placeholder.classList.remove('hidden');
             removeBtn.classList.add('hidden');
+            container.classList.add('no-logo-uploaded');
         }
 
         // =========================================================================
@@ -1006,10 +1075,16 @@
         }
 
         // =========================================================================
-        // TOUCH & MOUSE SIGNATURE PAD
+        // TOUCH & MOUSE SIGNATURE PADS (HANDYMAN + CUSTOMER)
         // =========================================================================
-        function initSignaturePad() {
-            const canvas = document.getElementById('signature-pad');
+        function initSignaturePads() {
+            setupSinglePad('handyman-signature-pad', 'handyman');
+            setupSinglePad('client-signature-pad', 'client');
+        }
+
+        function setupSinglePad(canvasId, roleKey) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
             function resizeCanvas() {
@@ -1026,7 +1101,7 @@
 
             resizeCanvas();
             window.addEventListener('resize', () => {
-                if (!hasSignature) resizeCanvas();
+                if (!sigState[roleKey].hasSigned) resizeCanvas();
             });
 
             function getCoords(e) {
@@ -1040,15 +1115,15 @@
             }
 
             function startDraw(e) {
-                isDrawing = true;
-                hasSignature = true;
+                sigState[roleKey].isDrawing = true;
+                sigState[roleKey].hasSigned = true;
                 const pos = getCoords(e);
                 ctx.beginPath();
                 ctx.moveTo(pos.x, pos.y);
             }
 
             function draw(e) {
-                if (!isDrawing) return;
+                if (!sigState[roleKey].isDrawing) return;
                 if (e.cancelable) e.preventDefault();
                 const pos = getCoords(e);
                 ctx.lineTo(pos.x, pos.y);
@@ -1056,7 +1131,7 @@
             }
 
             function endDraw() {
-                isDrawing = false;
+                sigState[roleKey].isDrawing = false;
             }
 
             canvas.addEventListener('mousedown', startDraw);
@@ -1068,11 +1143,13 @@
             canvas.addEventListener('touchend', endDraw);
         }
 
-        function clearSignature() {
-            const canvas = document.getElementById('signature-pad');
+        function clearSignature(roleKey) {
+            const canvasId = roleKey === 'client' ? 'client-signature-pad' : 'handyman-signature-pad';
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            hasSignature = false;
+            sigState[roleKey].hasSigned = false;
         }
 
         // =========================================================================
@@ -1086,7 +1163,7 @@
             const customerName = document.getElementById('customer-name').value.trim();
             const customerAddress = document.getElementById('customer-address').value.trim();
             if (!customerName) errors.push("Customer Full Name is required.");
-            if (!customerAddress) errors.push("Site / Customer Address is required.");
+            if (!customerAddress) errors.push("Customer Property Address is required.");
 
             // 2. Validate Custom Task Title if 'Other' is selected
             const selectedJob = document.getElementById('job-selector').value;
@@ -1112,9 +1189,9 @@
                 errors.push(`${unansweredCount} checklist item(s) still require a mandatory Yes, No, or Not Applicable selection.`);
             }
 
-            // 4. Validate Signature
-            if (!hasSignature) {
-                errors.push("Operative signature is required in the sign-off pad before generating the PDF.");
+            // 4. Validate Handyman Signature
+            if (!sigState.handyman.hasSigned) {
+                errors.push("Handyman signature is required in the sign-off pad before generating the PDF.");
             }
 
             if (errors.length > 0) {
@@ -1154,8 +1231,13 @@
             document.getElementById('payment-amount').value = '';
             document.getElementById('payment-status').value = 'Unpaid / Balance Due';
             document.getElementById('custom-task-name').value = '';
+            const signoffCustInput = document.getElementById('client-signoff-name');
+            signoffCustInput.value = '';
+            delete signoffCustInput.dataset.edited;
+
             setDefaultDateTime();
-            clearSignature();
+            clearSignature('handyman');
+            clearSignature('client');
             handleJobSelection();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
